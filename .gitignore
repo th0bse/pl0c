@@ -1,0 +1,12 @@
+# ignore IDE related stuff
+*.iml
+.idea/
+*.idea
+.project
+.settings/
+.classpath
+
+# ignore build data
+build/
+.gradle/
+bin/
