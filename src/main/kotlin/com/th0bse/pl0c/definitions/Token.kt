@@ -40,11 +40,13 @@ enum class Symbol(
     NOT_EQUALS("#"),
     COMMA(","),
     PERIOD("."),
+    COLON(":"),
     LESS_THAN("<"),
     GREATER_THAN(">"),
     LESS_EQUAL("["),
     GREATER_EQUAL("]"),
-    SEMICOLON(";");
+    SEMICOLON(";"),
+    ASSIGNMENT(":=");
 
     companion object {
         fun check(chars: CharArray): Boolean =

@@ -1,6 +1,18 @@
-var a, b;
+var a, b, buffer;
 
 begin
-    a = 2;
-    b = a + 3;
+    a =: 2;
+    b =: a + 3;
+
+    if (b < a) then
+    begin
+        buffer =: b;
+        b =: a;
+        a =: buffer;
+    end;
+
+    while (b > a) do
+    begin
+        a := a + 1;
+    end;
 end.

@@ -21,6 +21,12 @@ class Lexer {
                     if (!char.isWhitespace()) {
                         // can assert non-null b/c char.isDelimiter always true
                         tokens.add(Symbol.getByToken(CharArray(1) { char })!!)
+                        // if token is colon ":" and last token is "=", remove
+                        // last one and replace with assignment operator
+                        if (tokens[tokens.size - 1] == Symbol.COLON && tokens[tokens.size - 2] == Symbol.EQUALS) {
+                            tokens.remove(tokens[tokens.size - 1])
+                            tokens[tokens.size - 1] = Symbol.ASSIGNMENT
+                        }
                     }
                     newToken = true
                 } else chars.add(char)
