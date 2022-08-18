@@ -1,4 +1,4 @@
-package com.th0bse.pl0c
+package com.th0bse.pl0c.lexer
 
 import com.th0bse.pl0c.definitions.*
 import java.io.BufferedReader
@@ -7,7 +7,8 @@ class Lexer {
 
     private var tokens = ArrayList<Token>()
 
-    fun readUntilEndOrError(reader: BufferedReader) {
+    // TODO: add ability to recognize comments
+    fun readUntilEndOrError(reader: BufferedReader): List<Token> {
         var char: Char
         val chars = ArrayList<Char>()
         var token: Token
@@ -23,8 +24,8 @@ class Lexer {
                         tokens.add(Symbol.getByToken(CharArray(1) { char })!!)
                         // if token is colon ":" and last token is "=", remove
                         // last one and replace with assignment operator
-                        if (tokens[tokens.size - 1] == Symbol.COLON && tokens[tokens.size - 2] == Symbol.EQUALS) {
-                            tokens.remove(tokens[tokens.size - 1])
+                        if (tokens[tokens.size - 1] == Symbol.EQUALS && tokens[tokens.size - 2] == Symbol.COLON) {
+                            tokens.remove(tokens[tokens.size - 2])
                             tokens[tokens.size - 1] = Symbol.ASSIGNMENT
                         }
                     }
@@ -33,6 +34,8 @@ class Lexer {
             }
             chars.clear()
         }
+
+        return tokens
     }
 
     private fun readToken(chars: CharArray): Token {
