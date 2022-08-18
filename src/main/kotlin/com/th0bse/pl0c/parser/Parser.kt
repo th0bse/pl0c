@@ -107,9 +107,9 @@ class Parser {
 
             Keyword.BEGIN -> {
                 stream.next() // discard begin keyword, or semicolon token
-                do {
+                while (stream.next() == Symbol.SEMICOLON) {
                     statement(currentLeaf)
-                } while (stream.next() == Symbol.SEMICOLON)
+                }
                 if (stream.next() != Keyword.END) throw RuntimeException("End expected")
             }
 
