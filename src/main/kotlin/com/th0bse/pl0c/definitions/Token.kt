@@ -62,7 +62,7 @@ fun Char.isDelimiter(): Boolean =
 
 class Num(chars: CharArray) : Token {
 
-    private val num: Int
+    val num: Int
 
     init {
         num = chars.concatToString().toInt()
@@ -76,7 +76,7 @@ class Num(chars: CharArray) : Token {
 
 class Identifier(chars: CharArray) : Token {
 
-    private val identifier: String
+    val identifier: String
 
     init {
         identifier = chars.concatToString()
