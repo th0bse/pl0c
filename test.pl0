@@ -1,18 +1,7 @@
-var a, b, buffer;
+const a := 10, b := 30;
+var c;
 
 begin
-    a =: 2;
-    b =: a + 3;
-
-    if (b < a) then
-    begin
-        buffer =: b;
-        b =: a;
-        a =: buffer;
-    end;
-
-    while (b > a) do
-    begin
-        a := a + 1;
-    end;
+    c := -20;
+    c := a * (b - c);
 end.
