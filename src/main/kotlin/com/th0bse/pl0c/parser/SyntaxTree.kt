@@ -2,29 +2,28 @@ package com.th0bse.pl0c.parser
 
 import com.th0bse.pl0c.definitions.Token
 
-class SyntaxTree(var root: Leaf)
-
-class Leaf(
-    var symbol: SyntaxTreeNode,
-    val leaves: ArrayList<Leaf> = ArrayList()
-)
+class SyntaxTree(var root: SyntaxTreeNode)
 
 class SyntaxTreeNode(
-    private val node: Sym,
-    private val token: Token? = null
-)
+    val symbol: Sym,
+    val token: Token? = null,
+    val children: ArrayList<SyntaxTreeNode> = ArrayList()
+) {
+    override fun toString(): String {
+        return "SyntaxTreeNode(symbol=$symbol, token=$token)"
+    }
+}
 
 interface Sym
 
 enum class Terminal : Sym {
-    IF, CALL, NUMBER, ASSIGNMENT, IDENTIFIER, STOP, PLUS, CONST, VAR,
-    PROCEDURE, BEGIN, END, THEN, WHILE, DO, ODD, MINUS, DIVIDE, MULTIPLY, EQUAL,
-    COMMA, SEMICOLON, GREATER, LESS, GREATER_EQUAL, LESS_EQUAL, DIFFERENT,
-    LPAREN, RPAREN
+    CALL, NUMBER, IDENTIFIER, STOP, PLUS, ODD, MINUS, DIVIDE, MULTIPLY, EQUAL,
+    GREATER, LESS, GREATER_EQUAL, LESS_EQUAL, DIFFERENT
 }
 
 enum class NonTerminal : Sym {
-    PROGRAM, BLOCK, CONSTANT, VARIABLE, PROCEDURE, STATEMENT, CONDITION, EXPRESSION, TERM, FACTOR
+    PROGRAM, BLOCK, CONSTANT, VARIABLE, PROCEDURE, ASSIGNMENT, CALL, CONDITION,
+    WHILE, EXPRESSION, TERM, FACTOR
 }
 
 /*
@@ -41,10 +40,14 @@ variable = "var", ident, { ",", ident}, ";" ;
 
 procedure = "procedure", ident, ";", block, ";" ;
 
-statement = [ ident, ":=", expression | "call", ident |
+statement = [ assignment | call |
             "begin", statement, { ";", statement }, ";", "end" |
             "if", condition, "then", statement |
             "while", condition, "do", statement ] ;
+
+assignment = ident, ":=", expression ;
+
+call = "call", ident ;
 
 condition = "odd", expression | expression, ("=" | "#" | "<" | ">"), expression ;
 
