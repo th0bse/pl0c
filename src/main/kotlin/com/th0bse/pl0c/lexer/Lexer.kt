@@ -9,30 +9,26 @@ class Lexer {
 
     // TODO: add ability to recognize comments
     fun readUntilEndOrError(reader: BufferedReader): List<Token> {
-        var char: Char
         val chars = ArrayList<Char>()
-        var token: Token
-        var newToken: Boolean
+        var newToken = false
         while (reader.ready()) {
-            newToken = false
             while (!newToken) {
-                char = reader.read().toChar()
-                if (char.isDelimiter()) {
-                    if (chars.size > 0) tokens.add(readToken(chars.toCharArray()))
-                    if (!char.isWhitespace()) {
-                        // can assert non-null b/c char.isDelimiter always true
-                        tokens.add(Symbol.getByToken(CharArray(1) { char })!!)
-                        // if token is colon ":" and last token is "=", remove
-                        // last one and replace with assignment operator
-                        if (tokens[tokens.size - 1] == Symbol.EQUALS && tokens[tokens.size - 2] == Symbol.COLON) {
-                            tokens.remove(tokens[tokens.size - 2])
-                            tokens[tokens.size - 1] = Symbol.ASSIGNMENT
+                reader.read().toChar().also { char ->
+                    if (char.isDelimiter()) {
+                        if (chars.size > 0) tokens.add(chars.readToken())
+                        if (!char.isWhitespace()) {
+                            tokens.add(Symbol.getByToken(CharArray(1) { char })!!)
+                            if (tokens[tokens.size - 1] == Symbol.EQUALS && tokens[tokens.size - 2] == Symbol.COLON) {
+                                tokens.remove(tokens[tokens.size - 2])
+                                tokens[tokens.size - 1] = Symbol.ASSIGNMENT
+                            }
                         }
-                    }
-                    newToken = true
-                } else chars.add(char)
+                        newToken = true
+                    } else chars.add(char)
+                }
             }
             chars.clear()
+            newToken = false
         }
 
         return tokens
