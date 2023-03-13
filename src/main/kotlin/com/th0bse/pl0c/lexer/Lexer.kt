@@ -38,11 +38,11 @@ class Lexer {
         return tokens
     }
 
-    private fun readToken(chars: CharArray): Token {
+    private fun ArrayList<Char>.readToken(): Token {
         return when {
-            Keyword.check(chars) -> Keyword.getByToken(chars)
-            Num.check(chars) -> Num(chars)
-            Identifier.check(chars) -> Identifier(chars)
+            Keyword.check(this.toCharArray()) -> Keyword.getByToken(this.toCharArray())
+            Num.check(this.toCharArray()) -> Num(this.toCharArray())
+            Identifier.check(this.toCharArray()) -> Identifier(this.toCharArray())
             else -> throw RuntimeException("Token could not be parsed")
         }!! // can assert non-null b/c everything is explicitly checked beforehand
     }
