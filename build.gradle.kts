@@ -30,3 +30,7 @@ tasks.withType<ShadowJar> {
         put("Main-Class", "com.th0bse.pl0c.Pl0c")
     }
 }
+
+tasks.register("setBuildVersion") {
+    println("##teamcity[buildNumber '${project.version}.{build.number}']")
+}
