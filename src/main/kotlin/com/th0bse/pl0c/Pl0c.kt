@@ -19,8 +19,11 @@ class Pl0c {
         var program = generator.generateProgram(tree)
         PL0VM().execute(program)
     }
-}
 
-fun main(args: Array<String>) {
-    Pl0c().read()
+    companion object {
+        @JvmStatic
+        fun main(args: Array<String>) {
+            Pl0c().read()
+        }
+    }
 }
