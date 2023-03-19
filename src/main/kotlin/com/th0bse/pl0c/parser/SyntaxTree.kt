@@ -40,10 +40,11 @@ variable = "var", ident, { ",", ident}, ";" ;
 
 procedure = "procedure", ident, ";", block, ";" ;
 
-statement = [ assignment | call |
-            "begin", statement, { ";", statement }, ";", "end" |
+statement = [ assignment | call | statement_block |
             "if", condition, "then", statement |
             "while", condition, "do", statement ] ;
+
+statement_block = "begin", statement, { ";", statement }, ";", "end"
 
 assignment = ident, ":=", expression ;
 
