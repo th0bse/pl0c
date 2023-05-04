@@ -89,35 +89,43 @@ class PL0VM {
                 }
 
                 Mnemonic.DIV -> {
-                    stack.push(stack.pop() / stack.pop())
+                    val a = stack.pop()
+                    stack.push(stack.pop() / a)
                 }
 
                 Mnemonic.MOD -> {
-                    stack.push(stack.pop() % stack.pop())
+                    val a = stack.pop()
+                    stack.push(stack.pop() % a)
                 }
 
                 Mnemonic.EQU -> {
-                    stack.push(if (stack.pop() == stack.pop()) 1 else 0)
+                    val a = stack.pop()
+                    stack.push(if (stack.pop() == a) 1 else 0)
                 }
 
                 Mnemonic.NEQ -> {
-                    stack.push(if (stack.pop() != stack.pop()) 1 else 0)
+                    val a = stack.pop()
+                    stack.push(if (stack.pop() != a) 1 else 0)
                 }
 
                 Mnemonic.LTH -> {
-                    stack.push(if (stack.pop() < stack.pop()) 1 else 0)
+                    val a = stack.pop()
+                    stack.push(if (stack.pop() < a) 1 else 0)
                 }
 
                 Mnemonic.LEQ -> {
-                    stack.push(if (stack.pop() <= stack.pop()) 1 else 0)
+                    val a = stack.pop()
+                    stack.push(if (stack.pop() <= a) 1 else 0)
                 }
 
                 Mnemonic.GTH -> {
-                    stack.push(if (stack.pop() > stack.pop()) 1 else 0)
+                    val a = stack.pop()
+                    stack.push(if (stack.pop() > a) 1 else 0)
                 }
 
                 Mnemonic.GEQ -> {
-                    stack.push(if (stack.pop() >= stack.pop()) 1 else 0)
+                    val a = stack.pop()
+                    stack.push(if (stack.pop() >= a) 1 else 0)
                 }
             }
         }
