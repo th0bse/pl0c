@@ -37,20 +37,26 @@ enum class Symbol(
     LPAREN("("),
     RPAREN(")"),
     EQUALS("="),
-    NOT_EQUALS("#"),
+    EXCLAMATION("!"),
+    NOT_EQUALS(EXCLAMATION + EQUALS),
     COMMA(","),
     PERIOD("."),
-    COLON(":"),
     LESS_THAN("<"),
     GREATER_THAN(">"),
-    LESS_EQUAL("["),
-    GREATER_EQUAL("]"),
+    LESS_EQUAL(LESS_THAN + EQUALS),
+    GREATER_EQUAL(GREATER_THAN + EQUALS),
     SEMICOLON(";"),
-    ASSIGNMENT(":=");
+    COLON(":"),
+    ASSIGNMENT(COLON + EQUALS);
+
+    operator fun plus(other: Symbol): String = this.token + other.token
 
     companion object {
         fun check(chars: CharArray): Boolean =
             Symbol.values().any { it.token == chars.concatToString() }
+
+        fun check(vararg t: Symbol): Boolean =
+            Symbol.values().any { it.token == t.map { it.token }.joinToString("") }
 
         fun getByToken(chars: CharArray): Symbol? =
             Symbol.values().find { it.token == chars.concatToString() }

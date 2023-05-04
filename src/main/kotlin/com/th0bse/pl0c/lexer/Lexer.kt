@@ -38,7 +38,21 @@ class Lexer {
             chars.clear()
             newToken = false
         }
+        tokens.substituteMultiCharSymbols()
         return tokens
+    }
+
+    private fun ArrayList<Token>.substituteMultiCharSymbols() {
+        for (i in this.indices) {
+            if (i < this.size - 1 && this[i] is Symbol && this[i + 1] is Symbol) {
+                val symbol = this[i] as Symbol
+                val nextSymbol = this[i + 1] as Symbol
+                if (Symbol.check(symbol, nextSymbol)) {
+                    this[i] = Symbol.getByToken((symbol + nextSymbol).toCharArray())!!
+                    this.removeAt(i + 1)
+                }
+            }
+        }
     }
 
     private fun ArrayList<Char>.readToken(): Token {

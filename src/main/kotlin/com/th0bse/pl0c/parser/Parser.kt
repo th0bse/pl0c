@@ -110,7 +110,7 @@ class Parser {
             }
 
             Keyword.BEGIN -> {
-                stream.next() // discard begin keyword, or semicolon token
+                stream.next() // discard begin keyword
                 statement(currentNode)
                 while (stream.next() == Symbol.SEMICOLON) {
                     if (stream.peek() == Keyword.END) continue
@@ -137,8 +137,7 @@ class Parser {
             }
 
             Keyword.END -> {
-                stream.next()
-                if (stream.next() != Symbol.PERIOD) throw RuntimeException("Dot \".\" expected")
+                stream.next() // discard end keyword
             }
 
             else -> throw RuntimeException("Not a valid statement")
