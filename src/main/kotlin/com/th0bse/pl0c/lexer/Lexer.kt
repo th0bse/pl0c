@@ -7,30 +7,37 @@ class Lexer {
 
     private var tokens = ArrayList<Token>()
 
-    // TODO: add ability to recognize comments
     fun readUntilEndOrError(reader: BufferedReader): List<Token> {
         val chars = ArrayList<Char>()
         var newToken = false
+        var lastChar = ' '
         while (reader.ready()) {
             while (!newToken) {
-                reader.read().toChar().also { char ->
-                    if (char.isDelimiter()) {
-                        if (chars.size > 0) tokens.add(chars.readToken())
-                        if (!char.isWhitespace()) {
-                            tokens.add(Symbol.getByToken(CharArray(1) { char })!!)
-                            if (tokens[tokens.size - 1] == Symbol.EQUALS && tokens[tokens.size - 2] == Symbol.COLON) {
-                                tokens.remove(tokens[tokens.size - 2])
-                                tokens[tokens.size - 1] = Symbol.ASSIGNMENT
-                            }
+                reader.read().toChar().also {
+                    when {
+                        lastChar == it && it == '/' -> {
+                            tokens.removeLast()
+                            reader.readLine()
+                            newToken = true
                         }
-                        newToken = true
-                    } else chars.add(char)
+
+                        it.isDelimiter() -> {
+                            if (chars.size > 0) tokens.add(chars.readToken())
+                            if (!it.isWhitespace()) {
+                                val char = it
+                                tokens.add(Symbol.getByToken(CharArray(1) { char })!!)
+                            }
+                            newToken = true
+                        }
+
+                        else -> chars.add(it)
+                    }
+                    lastChar = it
                 }
             }
             chars.clear()
             newToken = false
         }
-
         return tokens
     }
 
@@ -40,6 +47,6 @@ class Lexer {
             Num.check(this.toCharArray()) -> Num(this.toCharArray())
             Identifier.check(this.toCharArray()) -> Identifier(this.toCharArray())
             else -> throw RuntimeException("Token could not be parsed")
-        }!! // can assert non-null b/c everything is explicitly checked beforehand
+        }!!
     }
 }
