@@ -51,6 +51,14 @@ enum class Symbol(
 
     operator fun plus(other: Symbol): String = this.token + other.token
 
+    fun precedence(): Int {
+        return when (this) {
+            PLUS, MINUS -> 1
+            MULTIPLY, DIVIDE -> 2
+            else -> 0
+        }
+    }
+
     companion object {
         fun check(chars: CharArray): Boolean =
             Symbol.values().any { it.token == chars.concatToString() }
