@@ -1,7 +1,8 @@
 const a := 10, b := 30;
-var c;
+var c, d;
 
+// This is a comment
 begin
-    c := -20;
-    c := a * (b - c);
+    c := 10;
+    d := a * (b + c);
 end.

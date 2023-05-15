@@ -69,7 +69,7 @@ class CodeGenerator {
 
             NonTerminal.CONSTANT -> {
                 val identifier = (node.children[0].token as Identifier).identifier
-                val value = (node.children[2].token as Num).num
+                val value = (node.children[1].token as Num).num
                 constantMapping[identifier] = value
             }
 
@@ -101,76 +101,51 @@ class CodeGenerator {
                 generatedCode.add(Instruction(Mnemonic.CAL, currentLevel, index))
             }
 
-            NonTerminal.EXPRESSION -> {
+            NonTerminal.PLUS -> {
+                generateCode(node.children[0])
+                generateCode(node.children[1])
+                generatedCode.add(Instruction(Mnemonic.ADD, 0, 0))
+            }
+
+            NonTerminal.MINUS -> {
                 when (node.children.size) {
-                    3 -> { // expression is an addition or subtraction
+                    1 -> { // unary minus
                         generateCode(node.children[0])
-                        generateCode(node.children[2])
-                        when (node.children[1].symbol) {
-                            Terminal.PLUS -> generatedCode.add(Instruction(Mnemonic.ADD, 0, 0))
-                            Terminal.MINUS -> generatedCode.add(Instruction(Mnemonic.SUB, 0, 0))
-                            else -> throw Exception("Invalid operator")
-                        }
                     }
 
-                    2 -> { // expression is a unary minus
+                    2 -> { // "normal" minus
+                        generateCode(node.children[0])
                         generateCode(node.children[1])
-                        when (node.children[0].symbol) {
-                            Terminal.MINUS -> {
-                                generatedCode.add(Instruction(Mnemonic.NEG, 0, 0))
-                            }
-
-                            else -> throw Exception("Invalid operator")
-                        }
-                    }
-
-                    1 -> { // expression is a term (multiplication or division, or a factor)
-                        generateCode(node.children[0])
                     }
                 }
+                generatedCode.add(Instruction(Mnemonic.SUB, 0, 0))
             }
 
-            NonTerminal.TERM -> {
-                when (node.children.size) {
-                    3 -> {
-                        generateCode(node.children[0])
-                        generateCode(node.children[2])
-                        when (node.children[1].symbol) {
-                            Terminal.MULTIPLY -> generatedCode.add(Instruction(Mnemonic.MUL, 0, 0))
-                            Terminal.DIVIDE -> generatedCode.add(Instruction(Mnemonic.DIV, 0, 0))
-                            else -> throw Exception("Invalid operator")
-                        }
-                    }
-
-                    1 -> {
-                        generateCode(node.children[0])
-                    }
-                }
+            NonTerminal.MULTIPLY -> {
+                generateCode(node.children[0])
+                generateCode(node.children[1])
+                generatedCode.add(Instruction(Mnemonic.MUL, 0, 0))
             }
 
-            NonTerminal.FACTOR -> {
-                when (node.children[0].symbol) {
-                    Terminal.NUMBER -> {
-                        val value = (node.children[0].token as Num).num
-                        generatedCode.add(Instruction(Mnemonic.LIT, 0, value))
-                    }
+            NonTerminal.DIVIDE -> {
+                generateCode(node.children[0])
+                generateCode(node.children[1])
+                generatedCode.add(Instruction(Mnemonic.DIV, 0, 0))
+            }
 
-                    Terminal.IDENTIFIER -> {
-                        val identifier = (node.children[0].token as Identifier).identifier
-                        if (constantMapping.containsKey(identifier)) {
-                            val value = constantMapping[identifier] ?: throw Exception("Identifier $identifier not found")
-                            generatedCode.add(Instruction(Mnemonic.LIT, currentLevel, value))
-                        } else {
-                            val index = identifierMapping[identifier] ?: throw Exception("Identifier $identifier not found")
-                            generatedCode.add(Instruction(Mnemonic.LOD, currentLevel, index))
-                        }
-                    }
+            Terminal.NUMBER -> {
+                val value = (node.token as Num).num
+                generatedCode.add(Instruction(Mnemonic.LIT, 0, value))
+            }
 
-                    NonTerminal.EXPRESSION -> {
-                        generateCode(node.children[0])
-                    }
-
-                    else -> throw Exception("Invalid factor")
+            Terminal.IDENTIFIER -> {
+                val identifier = (node.token as Identifier).identifier
+                if (constantMapping.containsKey(identifier)) {
+                    val value = constantMapping[identifier] ?: throw Exception("Identifier $identifier not found")
+                    generatedCode.add(Instruction(Mnemonic.LIT, currentLevel, value))
+                } else {
+                    val index = identifierMapping[identifier] ?: throw Exception("Identifier $identifier not found")
+                    generatedCode.add(Instruction(Mnemonic.LOD, currentLevel, index))
                 }
             }
         }
