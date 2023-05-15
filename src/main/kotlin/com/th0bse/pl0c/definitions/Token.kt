@@ -17,6 +17,8 @@ enum class Keyword(
     VAR("var"),
     WHILE("while");
 
+    override fun toString(): String = this.token
+
     companion object {
         fun check(chars: CharArray): Boolean =
             Keyword.values().any { it.token == chars.concatToString() }
@@ -59,6 +61,8 @@ enum class Symbol(
         }
     }
 
+    override fun toString(): String = this.token
+
     companion object {
         fun check(chars: CharArray): Boolean =
             Symbol.values().any { it.token == chars.concatToString() }
@@ -82,6 +86,8 @@ class Num(chars: CharArray) : Token {
         num = chars.concatToString().toInt()
     }
 
+    override fun toString(): String = num.toString()
+
     companion object {
         fun check(chars: CharArray): Boolean =
             chars.all { it.isDigit() }
@@ -95,6 +101,8 @@ class Identifier(chars: CharArray) : Token {
     init {
         identifier = chars.concatToString()
     }
+
+    override fun toString(): String = identifier
 
     companion object {
         fun check(chars: CharArray): Boolean =
