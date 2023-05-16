@@ -10,7 +10,7 @@ program = {constant},
 
 block = "begin", statement, { ";", statement }, ";", "end" ;
 
-constant = "const, ident, "=", number, { ",", ident, "=", number }, ";" ;
+constant = "const, ident, ":=", number, { ",", ident, ":=", number }, ";" ;
 
 variable = "var", ident, { ",", ident}, ";" ;
 
@@ -24,7 +24,7 @@ assignment = ident, ":=", expression ;
 
 call = "call", ident ;
 
-condition = "odd", expression | expression, ("=" | "#" | "<" | ">"), expression ;
+condition = "odd", expression | expression, ("=" | "!=" | "<" | ">"), expression ;
 
 expression = term, { ("+" | "-"), term } ;
 
